@@ -1,0 +1,9 @@
+
+# Types existant de NPC pour l'instant: 
+# - SELLING
+
+npcs:
+  jhon:
+    name: "Jhon"  # SANS COULEUR
+    type: SELLING
+    main-menu: apiarist_menu  # réfère aux fichiers dans menus/

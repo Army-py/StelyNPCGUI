@@ -1,0 +1,51 @@
+
+
+title: "§6§lJhon"
+
+pattern:
+  - "$ $ $ $ $ $ $ $ $"
+  - "$ $ $ % $ ! $ $ $"
+  - "$ $ $ $ $ $ $ $ *"
+
+
+items:
+  "$":
+    button-type: EMPTY
+    material: LIGHT_BLUE_STAINED_GLASS_PANE
+    name: " "
+    skull-texture: ""
+    amount: 1
+  "%":
+    button-type: SELLING
+    material: HONEY_BOTTLE
+    name: "§6Fiole de miel"
+    skull-texture: ""
+    amount: 1
+    lore:
+      - "§7Prix d'achat: §e10€"
+      - "§7Quantité: §e16"
+    sell:
+      item: HONEY_BOTTLE
+      price: 10
+      quantity: 16
+  "!":
+    button-type: SELLING
+    material: HONEYCOMB
+    name: "§6Rayon de miel"
+    skull-texture: ""
+    amount: 1
+    lore:
+      - "§7Prix d'achat: §e10€"
+      - "§7Quantité: §e64"
+    sell:
+      item: HONEYCOMB
+      price: 10
+      quantity: 64
+  "*":
+    button-type: BACK
+    material: ARROW
+    name: "§cRetour"
+    skull-texture: ""
+    amount: 1
+    lore:
+      - "§7Retour au menu principal"

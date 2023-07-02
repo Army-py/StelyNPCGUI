@@ -1,0 +1,16 @@
+
+# %PLUGIN% = Nom du plugin
+# %PLAYER% = Nom du joueur
+# %NPC% = Nom du NPC
+# %ITEM% = Nom de l'item
+# %AMOUNT% = Quantité de l'item
+# %PRICE% = Prix de l'item
+
+# Prefixe devant les messages envoyés
+prefix: "§7[§5%PLUGIN%§7] "
+
+# Quand le joueur vend un item
+sell: "§cVous avez vendu §6%AMOUNT% %ITEM% §cpour §6%PRICE%$§c."
+
+# Quand le joueur n'a pas assez d'item à vendre
+not-enough-item: "§cVous n'avez pas assez de §6%ITEM%§c."
