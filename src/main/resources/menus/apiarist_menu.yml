@@ -48,4 +48,4 @@ items:
     skull-texture: ""
     amount: 1
     lore:
-      - "§7Retour au menu principal"
+      - "§7Fermer le menu"
