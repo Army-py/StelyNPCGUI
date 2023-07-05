@@ -25,7 +25,7 @@ items:
       - "§7Prix d'achat: §e10€"
       - "§7Quantité: §e16"
     sell:
-      item: HONEY_BOTTLE
+      material: HONEY_BOTTLE
       price: 10
       quantity: 16
   "!":
@@ -38,7 +38,7 @@ items:
       - "§7Prix d'achat: §e10€"
       - "§7Quantité: §e64"
     sell:
-      item: HONEYCOMB
+      material: HONEYCOMB
       price: 10
       quantity: 64
   "*":

@@ -37,7 +37,7 @@ public class SellingMenu extends NPCMenu {
             if (itemSection.getString("button-type").equals(ButtonType.SELLING.toString())) {
                 ConfigurationSection sellSection = itemSection.getConfigurationSection("sell");
 
-                final Material material = Material.getMaterial(sellSection.getString("item"));
+                final Material material = Material.getMaterial(sellSection.getString("material"));
                 final int price = sellSection.getInt("price");
                 final int quantity = sellSection.getInt("quantity");
 
