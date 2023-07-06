@@ -1,16 +1,17 @@
 package fr.army.stelynpcgui.menu.button.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import fr.army.stelynpcgui.StelyNPCGUIPlugin;
 import fr.army.stelynpcgui.menu.button.ButtonType;
 import fr.army.stelynpcgui.menu.button.NPCButton;
+import fr.army.stelynpcgui.util.builder.ItemBuilder;
 import fr.army.stelynpcgui.util.manager.EconomyManager;
 import fr.army.stelynpcgui.util.manager.MessageManager;
 
@@ -21,6 +22,8 @@ public class BuyingButton extends NPCButton {
     private final EconomyManager economyManager = plugin.getEconomyManager();
 
     private Material buyingMaterial = null;
+    private String buyingItemName = null;
+    private String buyingSkullTexture = null;
     private double buyingPrice = 0.0;
     private int buyingQuantity = 0;
 
@@ -37,7 +40,9 @@ public class BuyingButton extends NPCButton {
         final Player player = (Player) clickEvent.getWhoClicked();            
         final String itemMaterial = buyingMaterial.toString().toLowerCase();
         
-        String itemName = itemMaterial.substring(0, 1).toUpperCase() + itemMaterial.substring(1);
+        String itemName = buyingItemName == null
+                ? itemMaterial.substring(0, 1).toUpperCase() + itemMaterial.substring(1)
+                : buyingItemName;
         if (itemsTranslation.isString(buyingMaterial.toString())){
             itemName = itemsTranslation.getString(buyingMaterial.toString());
         }
@@ -50,27 +55,36 @@ public class BuyingButton extends NPCButton {
                     .setItemPrice(buyingPrice);
 
 
-        if (player.getInventory().contains(buyingMaterial, buyingQuantity)) {
-            player.getInventory().removeItem(new ItemStack(buyingMaterial, buyingQuantity));
+        if (economyManager.checkMoneyPlayer(player, buyingPrice)) {
+            // player.getInventory().addItem(new ItemStack(buyingMaterial, buyingQuantity));
+            player.getInventory().addItem(
+                    ItemBuilder.getItem(buyingMaterial, buyingQuantity, buyingItemName, Collections.emptyList(), buyingSkullTexture, isGlow()));
 
-            economyManager.addMoneyPlayer(player, buyingPrice);
-            player.sendMessage(messageManager.getMessage("sell"));
+            economyManager.removeMoneyPlayer(player, buyingPrice);
+            player.sendMessage(messageManager.getMessage("buy"));
         } else {
-            // player.sendMessage("§cVous n'avez pas assez de " + getName() + ".");
-            player.sendMessage(messageManager.getMessage("not-enough-item"));
+            player.sendMessage(messageManager.getMessage("not-enough-money"));
         }
     }
 
 
-    public Material getSellingMaterial() {
+    public Material getBuyingMaterial() {
         return buyingMaterial;
     }
 
-    public double getSellingPrice() {
+    public String getBuyingItemName() {
+        return buyingItemName;
+    }
+
+    public String getBuyingSkullTexture() {
+        return buyingSkullTexture;
+    }
+
+    public double getBuyingPrice() {
         return buyingPrice;
     }
 
-    public int getSellingQuantity() {
+    public int getBuyingQuantity() {
         return buyingQuantity;
     }
 
@@ -78,17 +92,27 @@ public class BuyingButton extends NPCButton {
         return npcName;
     }
 
-    public BuyingButton setSellingMaterial(Material sellingMaterial) {
+    public BuyingButton setBuyingMaterial(Material sellingMaterial) {
         this.buyingMaterial = sellingMaterial;
         return this;
     }
 
-    public BuyingButton setSellingPrice(int sellingPrice) {
+    public BuyingButton setBuyingItemName(String sellingItemName) {
+        this.buyingItemName = sellingItemName;
+        return this;
+    }
+
+    public BuyingButton setBuyingSkullTexture(String sellingSkullTexture) {
+        this.buyingSkullTexture = sellingSkullTexture;
+        return this;
+    }
+
+    public BuyingButton setBuyingPrice(int sellingPrice) {
         this.buyingPrice = sellingPrice;
         return this;
     }
 
-    public BuyingButton setSellingQuantity(int sellingQuantity) {
+    public BuyingButton setBuyingQuantity(int sellingQuantity) {
         this.buyingQuantity = sellingQuantity;
         return this;
     }
@@ -99,8 +123,11 @@ public class BuyingButton extends NPCButton {
     }
 
     public static BuyingButton mapButton(NPCButton button) {
-        return new BuyingButton(button.getCharacter(), button.getSlot(), button.getMaterial(), button.getName(),
+        BuyingButton b = new BuyingButton(button.getCharacter(), button.getSlot(), button.getMaterial(), button.getName(),
                 button.getAmount(),
                 button.getButtonType(), button.getLore());
+        b.setSkullTexture(button.getSkullTexture());
+        b.setGlow(button.isGlow());
+        return b;
     }
 }
