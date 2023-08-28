@@ -19,8 +19,8 @@ public abstract class NPCButton {
     private final ButtonType buttonType;
     private final List<String> lore;
 
-    private boolean glow;
-    private String skullTexture;
+    private boolean glow = false;
+    private String skullTexture = null;
 
     public NPCButton(String character, int slot, Material material, String name, int amount, ButtonType buttonType,
             List<String> lore) {
@@ -65,7 +65,7 @@ public abstract class NPCButton {
     }
 
     public ItemStack getItemStack(){
-        return ItemBuilder.getItem(material, character, name, lore, skullTexture, glow);
+        return ItemBuilder.getItem(material, amount, name, lore, skullTexture, glow);
     }
 
     public boolean isGlow() {

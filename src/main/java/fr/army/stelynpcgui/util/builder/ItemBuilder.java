@@ -1,32 +1,34 @@
 package fr.army.stelynpcgui.util.builder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import fr.army.stelynpcgui.StelyNPCGUIPlugin;
 
 public class ItemBuilder {
-    public static ItemStack getItem(Material material, String buttonName, String displayName, List<String> lore,
-            String headTexture, boolean isEnchanted) {
-        if (material.equals(Material.PLAYER_HEAD) && !headTexture.isBlank())
-            return getCustomHead(headTexture, buttonName, displayName, lore, null);
+    public static ItemStack getItem(Material material, int amount, String displayName, List<String> lore,
+            String headTexture, boolean isGlow) {
+        if (material.equals(Material.PLAYER_HEAD) && (headTexture != null && !headTexture.isBlank()))
+            return buildCustomHead(headTexture, displayName, lore, null);
+    
+        return buildItem(material, amount, displayName, lore, isGlow);
+    }
 
-        ItemStack item = new ItemStack(material, 1);
+    public static ItemStack getHiddenPropertiesItem(Material material, int amount, String displayName, List<String> lore,
+            String headTexture, boolean isGlow) {
+    
+        ItemStack item = getItem(material, amount, displayName, lore, headTexture, isGlow);
+
         ItemMeta meta = item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
@@ -34,17 +36,28 @@ public class ItemBuilder {
         meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private static ItemStack buildItem(Material material, int amount, String displayName, List<String> lore, boolean isGlow) {
+        ItemStack item = new ItemStack(material, amount);
+        ItemMeta meta = item.getItemMeta();
         if (!lore.isEmpty()) {
             List<String> loreList = (List<String>) lore;
             meta.setLore(loreList);
         }
 
-        if (isEnchanted) {
+        if (isGlow) {
             meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
-        NamespacedKey key = new NamespacedKey(StelyNPCGUIPlugin.getInstance(), "buttonName");
-        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, buttonName);
+        // NamespacedKey key = new NamespacedKey(StelyNPCGUIPlugin.getInstance(),
+        // "buttonName");
+        // meta.getPersistentDataContainer().set(key, PersistentDataType.STRING,
+        // buttonName);
 
         meta.setDisplayName(displayName);
         item.setItemMeta(meta);
@@ -52,52 +65,53 @@ public class ItemBuilder {
     }
 
     public static ItemStack getPlayerHead(OfflinePlayer player, String name, List<String> lore) {
-        return getCustomHead(null, null, name, lore, player);
+        return buildCustomHead(null, name, lore, player);
     }
 
-    private static ItemStack getCustomHead(String texture, String buttonName, String name, List<String> lore,
+    private static ItemStack buildCustomHead(String texture, String name, List<String> lore,
             OfflinePlayer player) {
+
+        GameProfile profile = new GameProfile(toUUID(texture), (String) null);
+        profile.getProperties().put("textures", new Property("textures", texture));
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta meta = item.getItemMeta();
 
-        SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
-        GameProfile profile = new GameProfile(player == null ? UUID.randomUUID() : player.getUniqueId(),
-                player == null ? null : player.getName());
-
-        if (texture != null) {
-            profile.getProperties().put("textures", new Property("textures", texture));
-        }
-
+        // System.out.println("texture: " + texture);
         try {
-            Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+            Field mtd = meta.getClass().getDeclaredField("profile");
             mtd.setAccessible(true);
-            mtd.invoke(skullMeta, profile);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+            mtd.set(meta, profile);
+        } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             ex.printStackTrace();
         }
 
-        skullMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        skullMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        skullMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        skullMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        skullMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        skullMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         if (!lore.isEmpty()) {
             List<String> loreList = (List<String>) lore;
-            skullMeta.setLore(loreList);
+            meta.setLore(loreList);
         }
 
-        if (player != null) {
-            NamespacedKey key = new NamespacedKey(StelyNPCGUIPlugin.getInstance(), "playerName");
-            skullMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, player.getName());
-        }
+        // if (player != null) {
+        // NamespacedKey key = new NamespacedKey(StelyNPCGUIPlugin.getInstance(),
+        // "playerName");
+        // skullMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING,
+        // player.getName());
+        // }
 
-        if (buttonName != null) {
-            NamespacedKey key = new NamespacedKey(StelyNPCGUIPlugin.getInstance(), "buttonName");
-            skullMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, buttonName);
-        }
+        // if (buttonName != null) {
+        // NamespacedKey key = new NamespacedKey(StelyNPCGUIPlugin.getInstance(),
+        // "buttonName");
+        // skullMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING,
+        // buttonName);
+        // }
 
-        skullMeta.setDisplayName(name);
-        item.setItemMeta(skullMeta);
+        meta.setDisplayName(name);
+        item.setItemMeta(meta);
         return item;
+    }
+
+
+    private static UUID toUUID(String input) {
+        long val = input.hashCode();
+        return new UUID(val, val);
     }
 }

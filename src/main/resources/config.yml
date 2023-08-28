@@ -7,3 +7,7 @@ npcs:
     name: "Jhon"  # SANS COULEUR
     type: SELLING
     main-menu: apiarist_menu  # réfère aux fichiers dans menus/
+  jean:
+    name: "Jean"
+    type: BUYING
+    main-menu: golden_bourse

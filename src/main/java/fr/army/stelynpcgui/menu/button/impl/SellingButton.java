@@ -1,5 +1,6 @@
 package fr.army.stelynpcgui.menu.button.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.army.stelynpcgui.StelyNPCGUIPlugin;
 import fr.army.stelynpcgui.menu.button.ButtonType;
 import fr.army.stelynpcgui.menu.button.NPCButton;
+import fr.army.stelynpcgui.util.builder.ItemBuilder;
 import fr.army.stelynpcgui.util.manager.EconomyManager;
 import fr.army.stelynpcgui.util.manager.MessageManager;
 
@@ -21,6 +23,8 @@ public class SellingButton extends NPCButton {
     private final EconomyManager economyManager = plugin.getEconomyManager();
 
     private Material sellingMaterial = null;
+    private String sellingItemName = null;
+    private String sellingSkullTexture = null;
     private double sellingPrice = 0.0;
     private int sellingQuantity = 0;
 
@@ -37,7 +41,9 @@ public class SellingButton extends NPCButton {
         final Player player = (Player) clickEvent.getWhoClicked();            
         final String itemMaterial = sellingMaterial.toString().toLowerCase();
         
-        String itemName = itemMaterial.substring(0, 1).toUpperCase() + itemMaterial.substring(1);
+        String itemName = sellingItemName == null
+                ? itemMaterial.substring(0, 1).toUpperCase() + itemMaterial.substring(1)
+                : sellingItemName;
         if (itemsTranslation.isString(sellingMaterial.toString())){
             itemName = itemsTranslation.getString(sellingMaterial.toString());
         }
@@ -49,9 +55,16 @@ public class SellingButton extends NPCButton {
                     .setItemAmount(sellingQuantity)
                     .setItemPrice(sellingPrice);
 
-
-        if (player.getInventory().contains(sellingMaterial, sellingQuantity)) {
-            player.getInventory().removeItem(new ItemStack(sellingMaterial, sellingQuantity));
+        ItemStack item = ItemBuilder.getItem(sellingMaterial, sellingQuantity, sellingItemName, Collections.emptyList(),
+                sellingSkullTexture, isGlow());
+        
+        System.out.println("material: " + sellingMaterial.toString());
+        System.out.println("quantity: " + sellingQuantity);
+        System.out.println("name: " + sellingItemName);
+        System.out.println("skull: " + sellingSkullTexture);
+        if (player.getInventory().contains(item)) {
+            player.getInventory().removeItem(item);
+            // player.getInventory().removeItem(item);
 
             economyManager.addMoneyPlayer(player, sellingPrice);
             player.sendMessage(messageManager.getMessage("sell"));
@@ -83,6 +96,16 @@ public class SellingButton extends NPCButton {
         return this;
     }
 
+    public SellingButton setSellingItemName(String sellingItemName) {
+        this.sellingItemName = sellingItemName;
+        return this;
+    }
+
+    public SellingButton setSellingSkullTexture(String sellingSkullTexture) {
+        this.sellingSkullTexture = sellingSkullTexture;
+        return this;
+    }
+
     public SellingButton setSellingPrice(int sellingPrice) {
         this.sellingPrice = sellingPrice;
         return this;
@@ -99,8 +122,11 @@ public class SellingButton extends NPCButton {
     }
 
     public static SellingButton mapButton(NPCButton button) {
-        return new SellingButton(button.getCharacter(), button.getSlot(), button.getMaterial(), button.getName(),
+        SellingButton b = new SellingButton(button.getCharacter(), button.getSlot(), button.getMaterial(), button.getName(),
                 button.getAmount(),
                 button.getButtonType(), button.getLore());
+        b.setSkullTexture(button.getSkullTexture());
+        b.setGlow(button.isGlow());
+        return b;
     }
 }

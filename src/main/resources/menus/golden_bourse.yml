@@ -1,11 +1,11 @@
 
 
-title: "§6§lJhon"
+title: "§6§lJean"
 
 pattern:
   - "$ $ $ $ $ $ $ $ $"
-  - "$ $ $ % $ ! $ $ $"
-  - "$ $ $ $ $ $ $ / *"
+  - "$ $ $ $ % $ $ $ $"
+  - "$ $ $ $ $ $ $ $ *"
 
 
 items:
@@ -16,33 +16,7 @@ items:
     skull-texture: ""
     amount: 1
   "%":
-    button-type: SELLING
-    material: HONEY_BOTTLE
-    name: "§6Fiole de miel"
-    skull-texture: ""
-    amount: 1
-    lore:
-      - "§7Prix d'achat: §e10€"
-      - "§7Quantité: §e16"
-    sell:
-      material: HONEY_BOTTLE
-      price: 10
-      quantity: 16
-  "!":
-    button-type: SELLING
-    material: HONEYCOMB
-    name: "§6Rayon de miel"
-    skull-texture: ""
-    amount: 1
-    lore:
-      - "§7Prix d'achat: §e10€"
-      - "§7Quantité: §e64"
-    sell:
-      material: HONEYCOMB
-      price: 10
-      quantity: 64
-  "/":
-    button-type: SELLING
+    button-type: BUYING
     material: PLAYER_HEAD
     name: "§e§oBourse d'or"
     skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzhlYTc5MzM1ODFlZTlmYjQwMGYzOTA0NGQzMDE1Y2EwZDQzYmI2ZTcyZmM5MjY3YzdmZDEzNjFmNjhmZjEyYiJ9fX0="
@@ -50,7 +24,7 @@ items:
     lore:
       - "§7Prix d'achat: §e50€"
       - "§7Quantité: §e1"
-    sell:
+    buy:
       material: PLAYER_HEAD
       name: "§e§oBourse d'or"
       skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzhlYTc5MzM1ODFlZTlmYjQwMGYzOTA0NGQzMDE1Y2EwZDQzYmI2ZTcyZmM5MjY3YzdmZDEzNjFmNjhmZjEyYiJ9fX0="

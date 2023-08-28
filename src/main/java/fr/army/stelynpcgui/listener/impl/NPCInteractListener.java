@@ -9,9 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import fr.army.stelynpcgui.StelyNPCGUIPlugin;
+import fr.army.stelynpcgui.menu.impl.BuyingMenu;
 import fr.army.stelynpcgui.menu.impl.SellingMenu;
 import fr.army.stelynpcgui.npc.NPC;
 import fr.army.stelynpcgui.npc.NPCType;
+import fr.army.stelynpcgui.npc.impl.BuyingNPC;
 import fr.army.stelynpcgui.npc.impl.SellingNPC;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
@@ -52,8 +54,10 @@ public class NPCInteractListener implements Listener {
             NPC npc = null;
             if (npcType.equals(NPCType.SELLING.toString())){
                 npc = new SellingNPC(npcName, SellingMenu.createInstance(npcName, fileName));
+            }else if (npcType.equals(NPCType.BUYING.toString())){
+                npc = new BuyingNPC(npcName, BuyingMenu.createInstance(npcName, fileName));
+                
             }
-
             if (npc != null){
                 npcs.add(npc);
             }

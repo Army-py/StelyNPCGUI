@@ -38,12 +38,18 @@ public class SellingMenu extends NPCMenu {
                 ConfigurationSection sellSection = itemSection.getConfigurationSection("sell");
 
                 final Material material = Material.getMaterial(sellSection.getString("material"));
+                final String name = sellSection.getString("name");
+                final String skullTexture = sellSection.getString("skull-texture") == null
+                        || sellSection.getString("skull-texture").isEmpty() ? null
+                                : sellSection.getString("skull-texture");
                 final int price = sellSection.getInt("price");
                 final int quantity = sellSection.getInt("quantity");
 
                 for (int slot : menu.getSlots(section)) {
                     final SellingButton button = SellingButton.mapButton(menu.getButton(slot));
                     button.setSellingMaterial(material);
+                    button.setSellingItemName(name);
+                    button.setSellingSkullTexture(skullTexture);
                     button.setSellingPrice(price);
                     button.setSellingQuantity(quantity);
                     button.setNPCName(npcName);

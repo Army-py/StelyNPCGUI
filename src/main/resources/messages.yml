@@ -14,3 +14,9 @@ sell: "§cVous avez vendu §6%AMOUNT% %ITEM% §cpour §6%PRICE%$§c."
 
 # Quand le joueur n'a pas assez d'item à vendre
 not-enough-item: "§cVous n'avez pas assez de §6%ITEM%§c."
+
+# Quand le joueur achète un item
+buy: "§aVous avez acheté §6%AMOUNT% %ITEM% §apour §6%PRICE%$§a."
+
+# Quand le joueur n'a pas assez d'argent pour acheter un item
+not-enough-money: "§cVous n'avez pas assez d'argent pour acheter §6%ITEM%§c."
